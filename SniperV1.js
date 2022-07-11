@@ -62,6 +62,8 @@ room.onTeamVictory = function(scores){
     gameStartWin(scores);
 }
 
+
+
 const gameStartWin = (scores) =>{
     if (scores.blue > scores.red){
         if(playerData.findIndex((element)=> element.team == 0) != -1){
@@ -121,7 +123,11 @@ function GameStartFirst(){
 
 
 room.onPlayerJoin = function(player) {
-    getPlayerList()
+    getPlayerList();
+  
+
+    room.sendAnnouncement("🔵 Hoşgeldin " + player.name, null, 0xFF0000, "bold", 1)
+
 
   updateAdmins();
   
@@ -134,6 +140,8 @@ room.onPlayerLeave = function(player) {
   updateAdmins();
   // çıkan oyuncunun playerData arrayinden siler.
   getPlayerList();
-    
+  if (playerData.length < 2){
+    room.stopGame();
+  }
 }
 
