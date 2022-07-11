@@ -62,37 +62,50 @@ room.onTeamVictory = function(scores){
     gameStartWin(scores);
 }
 
-
-
 const gameStartWin = (scores) =>{
     if (scores.blue > scores.red){
         if(playerData.findIndex((element)=> element.team == 0) != -1){
-        const indexRed = playerData.findIndex((element)=>element.team == 1);
         // yenilen(redin) indexinin döndürür.
+        const indexRed = playerData.findIndex((element)=>element.team == 1);
+        // yenen(bluenin) indexinini dönüdürü
+        const indexBlue = playerData.findIndex((element)=>element.team == 2);
         const indexSpec = playerData.findIndex((element)=>element.team == 0);
         room.setPlayerTeam(playerData[indexRed].id, 0)
         updateTeamPlayerData()
-        room.setPlayerTeam(playerData[indexSpec].id, 1)
+        room.setPlayerTeam(playerData[indexSpec].id, 2)
+        updateTeamPlayerData()
+        room.setPlayerTeam(playerData[indexBlue].id, 1)
+        updateTeamPlayerData()
+        room.startGame()
+        firstMatch = false;
+    }
+    else{
+        const indexRed = playerData.findIndex((element)=>element.team == 1);
+        const indexBlue = playerData.findIndex((element)=>element.team == 2);
+        
+        room.setPlayerTeam(playerData[indexRed].id, 2)
+        updateTeamPlayerData()
+        room.setPlayerTeam(playerData[indexBlue].id, 1)
+        updateTeamPlayerData()
+        room.startGame()
+        firstMatch = false;
+    }
+        
+    } else if (scores.blue < scores.red){
+        if(playerData.findIndex((element)=>element.team == 0) != -1){
+        // yenilen(bluenin) indexinin döndürür.
+        const indexBlue = playerData.findIndex((element)=>element.team == 2);
+        // yenen(redin) indexini döndürür.
+        const indexSpec = playerData.findIndex((element)=>element.team == 0);
+        room.setPlayerTeam(playerData[indexBlue].id, 0)
+        room.setPlayerTeam(playerData[indexSpec].id, 2)
         updateTeamPlayerData()
         room.startGame()
         firstMatch = false;
     }
     else{
         room.startGame()
-    }
-        
-    } else if (scores.blue < scores.red){
-        if(playerData.findIndex((element)=>element.team == 0) != -1){
-        const indexBlue = playerData.findIndex((element)=>element.team == 2);
-        // yenilen(bluenin) indexinin döndürür.
-        const indexSpec = playerData.findIndex((element)=>element.team == 0);
-        room.setPlayerTeam(playerData[indexBlue].id, 0)
-        room.setPlayerTeam(playerData[indexSpec].id, 2)
-        updateTeamPlayerData()
-        room.startGame()
-    }
-    else{
-        room.startGame()
+        firstMatch = false;
     }
 
     }
@@ -142,6 +155,8 @@ room.onPlayerLeave = function(player) {
   getPlayerList();
   if (playerData.length < 2){
     room.stopGame();
+    room.setPlayerTeam(playerData[0].id, 0)
+    firstMatch = true;
   }
 }
 
