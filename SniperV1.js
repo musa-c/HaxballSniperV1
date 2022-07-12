@@ -153,10 +153,16 @@ room.onPlayerLeave = function(player) {
   updateAdmins();
   // çıkan oyuncunun playerData arrayinden siler.
   getPlayerList();
-  if (playerData.length < 2){
+
+    if(playerData.length == 1){
     room.stopGame();
     room.setPlayerTeam(playerData[0].id, 0)
     firstMatch = true;
-  }
+}else if (playerData.length == 0){
+    room.stopGame();
+    firstMatch = true;
+}
+
+
 }
 
