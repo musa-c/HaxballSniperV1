@@ -7,7 +7,7 @@ var room = HBInit({
 	roomName: "🥇🥇 💎 V1 SNİPER 💎 🥇🥇",
 	maxPlayers: 8,
 	noPlayer: true, // Remove host player (recommended!)
-    public: true,
+    public: false,
     geo : {code: "tr", lat: 41.015137, lon: 28.979530},
 });
 
@@ -127,7 +127,7 @@ function GameStartFirst(){
     room.setPlayerTeam(playerData[indexArr[1]].id, 2)
     updateTeamPlayerData()
     room.startGame()
-            firstMatch = false
+    firstMatch = false
     room.sendAnnouncement("Oda 2 kişiye büyük eşit oldu. Selametle. ", null,0xFF0000, "italic", 2);
 
     }
@@ -153,7 +153,29 @@ room.onPlayerLeave = function(player) {
   updateAdmins();
   // çıkan oyuncunun playerData arrayinden siler.
   getPlayerList();
-
+  
+  if(player.team == 1){
+    // çıkan oyuncu red'den çıktıysa
+    if(playerData.findIndex(element => element.team == 0) != -1){
+        room.stopGame();
+        const blueIndex = playerData.findIndex((element)=> element.team == 2);
+        const specIndex = playerData.findIndex((element)=>element.team == 0);
+        room.setPlayerTeam(playerData[specIndex].id, 2);
+        getPlayerList();
+        room.setPlayerTeam(playerData[blueIndex].id, 1)
+        room.startGame();
+    }
+  }else if(player.team == 2){
+    // çıkan oyuncu blue'dan çıktıysa
+    if(playerData.findIndex(element => element.team == 0) != -1){
+        room.stopGame();
+        const specIndex = playerData.findIndex((element)=>element.team == 0);
+        room.setPlayerTeam(playerData[specIndex].id, 2);
+        getPlayerList();
+        room.startGame();
+    }
+  }
+  
     if(playerData.length == 1){
     room.stopGame();
     room.setPlayerTeam(playerData[0].id, 0)
